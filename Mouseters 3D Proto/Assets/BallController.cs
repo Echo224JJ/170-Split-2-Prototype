@@ -23,7 +23,8 @@ public class BallController : MonoBehaviour
         Camera.main.transform.SetPositionAndRotation(
             new Vector3(ballpos.x,Camera.main.transform.position.y,ballpos.z),
             Camera.main.transform.rotation);
-        if (Input.GetMouseButtonDown(0) == true){
+        if (Input.GetMouseButtonDown(0) == true && (this.GetComponent<Rigidbody>().velocity == Vector3.zero)) {
+
             aiming = true; // ENTER AIMING MODE
             mouse_start_pos = Input.mousePosition;
         }
@@ -38,10 +39,10 @@ public class BallController : MonoBehaviour
             mousepos = Input.mousePosition;
             var moveDir = mouse_start_pos - mousepos;
             //TRANSLATE TO BALL POSITION
-            moveDir.z = -moveDir.x;
-            moveDir.x = moveDir.y;
-            moveDir.y = 0;
-            var potato= ballpos + moveDir;
+            moveDir.x = -moveDir.x;
+            moveDir.z = -moveDir.y;
+            moveDir.y = 0f;
+            var potato = ballpos + moveDir;
             //negative_force_vec = new Vector3(ballpos.x-mousepos.x, 0.0f, ballpos.z-mousepos.y);
             var endpos = Vector3.Normalize(potato);
             line.SetPosition(1,ballpos + endpos);
@@ -55,9 +56,8 @@ public class BallController : MonoBehaviour
         else {
             line.enabled = false;
         }
-
     }
     void shoot(Vector3 dir) {
-        this.GetComponent<Rigidbody>().AddForce(dir * 100);
+        this.GetComponent<Rigidbody>().AddForce(dir * 500);
     }
 }
