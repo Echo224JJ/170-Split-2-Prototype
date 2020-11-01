@@ -5,6 +5,7 @@ using UnityEngine;
 public class BallController : MonoBehaviour
 {
     private bool aiming = false;
+    public bool camera_follow = false;
     Vector3 force_to_add;
     Vector3 mousepos;
     Vector3 mouse_start_pos;
@@ -20,9 +21,12 @@ public class BallController : MonoBehaviour
     void Update()
     {   
         var ballpos = this.transform.position;
-        Camera.main.transform.SetPositionAndRotation(
-            new Vector3(ballpos.x,Camera.main.transform.position.y,ballpos.z),
-            Camera.main.transform.rotation);
+        if (camera_follow) {
+            Camera.main.transform.SetPositionAndRotation(
+                new Vector3(ballpos.x,Camera.main.transform.position.y,ballpos.z),
+                Camera.main.transform.rotation);
+        }
+        
         if (Input.GetMouseButtonDown(0) == true && (this.GetComponent<Rigidbody>().velocity == Vector3.zero)) {
 
             aiming = true; // ENTER AIMING MODE
