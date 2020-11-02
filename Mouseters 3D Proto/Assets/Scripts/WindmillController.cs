@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class WindmillController : MonoBehaviour
 {
+    public float spinSpeed;
     private Rigidbody rb;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rb.maxAngularVelocity = spinSpeed;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(0, 0, 1);
+        rb.AddTorque(Vector3.forward * 1000, ForceMode.Impulse);
+
     }
 }

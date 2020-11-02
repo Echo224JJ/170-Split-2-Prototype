@@ -64,12 +64,4 @@ public class BallController : MonoBehaviour
     void shoot(Vector3 dir) {
         this.GetComponent<Rigidbody>().AddForce(dir * 500);
     }
-
-    void OnTriggerEnter(Collider other) {
-        if(other.tag == "Hole") {
-            this.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
-            
-        }
-    }
-
 }
