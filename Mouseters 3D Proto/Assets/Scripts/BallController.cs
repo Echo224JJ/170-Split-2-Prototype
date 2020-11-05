@@ -62,7 +62,7 @@ public class BallController : MonoBehaviour
         }
     }
     void shoot(Vector3 dir) {
-        this.GetComponent<Rigidbody>().AddForce(dir * 500);
+        this.GetComponent<Rigidbody>().AddForce(dir * 1500);
     }
 
     void OnTriggerEnter (Collider other) {
