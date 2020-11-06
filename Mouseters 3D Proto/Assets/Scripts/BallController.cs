@@ -14,6 +14,7 @@ public class BallController : MonoBehaviour
     Vector3 mouse_start_pos;
     LineRenderer line;
     Vector3 negative_force_vec;
+    Vector3 startingPos;
     // Start is called before the first frame update
     void Start()
     {
@@ -61,8 +62,9 @@ public class BallController : MonoBehaviour
             //Debug.Log("WORLD-ballpos" +ballpos+"    |SCREEN-forceVec"+forceVec+"   |WORLD-dist"+distance+"   |WORLD-mousepos"+mouseWorld);
             var lineLen = Vector3.Distance(ballpos,lineend);
             Debug.Log("distance? "+lineLen);
-            if (Input.GetMouseButtonUp(0) == true) {
+            if (Input.GetMouseButtonUp(0) == true) {    
                 aiming = false;
+                startingPos = this.transform.position;
                 shoot(Vector3.Normalize(lineend-ballpos), lineLen);
             }
         }
@@ -77,6 +79,10 @@ public class BallController : MonoBehaviour
     void OnTriggerEnter (Collider other) {
         if(other.tag == "Hole") {
             this.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+        }
+        if(other.tag == "Water") {
+            this.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+            this.transform.position = startingPos;
         }
     }
     private Vector3 GetMouseAsWorldSpace(float depth) {
