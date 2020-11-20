@@ -15,10 +15,12 @@ public class BallController : MonoBehaviour
     LineRenderer line;
     Vector3 negative_force_vec;
     Vector3 startingPos;
+    Vector3 camera_initial_loc;
     // Start is called before the first frame update
     void Start()
     {
         line = this.GetComponent<LineRenderer>();
+        camera_initial_loc = Camera.main.transform.position;
     }
 
     // Update is called once per frame
@@ -27,8 +29,9 @@ public class BallController : MonoBehaviour
         var ballpos = this.transform.position;
         if (camera_follow) {
             Camera.main.transform.SetPositionAndRotation(
-                new Vector3(ballpos.x,Camera.main.transform.position.y,ballpos.z),
+                new Vector3(ballpos.x,Camera.main.transform.position.y,camera_initial_loc.z+ballpos.z),
                 Camera.main.transform.rotation);
+                //Debug.Log(ballpos.z-camera_initial_loc.y);
         }
         if (Input.GetMouseButtonDown(0) == true && (this.GetComponent<Rigidbody>().velocity == Vector3.zero)) {
 
@@ -61,7 +64,7 @@ public class BallController : MonoBehaviour
             //line.endWidth = 0;
             //Debug.Log("WORLD-ballpos" +ballpos+"    |SCREEN-forceVec"+forceVec+"   |WORLD-dist"+distance+"   |WORLD-mousepos"+mouseWorld);
             var lineLen = Vector3.Distance(ballpos,lineend);
-            Debug.Log("distance? "+lineLen);
+            //Debug.Log("distance? "+lineLen);
             if (Input.GetMouseButtonUp(0) == true) {    
                 aiming = false;
                 startingPos = this.transform.position;
