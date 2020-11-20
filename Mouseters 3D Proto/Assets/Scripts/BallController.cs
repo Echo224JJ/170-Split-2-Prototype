@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
+    public bool groundAbility;
     private bool aiming = false;
     public bool camera_follow = false;
     public float force_per_unity = 750;
@@ -20,6 +21,7 @@ public class BallController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        groundAbility = false;
         line = this.GetComponent<LineRenderer>();
         line.startWidth = line.endWidth = 0.03f;
         camera_initial_loc = Camera.main.transform.position;
@@ -102,5 +104,16 @@ public class BallController : MonoBehaviour
         //var screenvec = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
         //Debug.Log("vec "+screenvec+"   |ray "+ray);
         return ray.origin + ray.direction * depth;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (groundAbility == true)
+        {
+            if (collision.gameObject.tag == "Rock")
+            {
+                Destroy(collision.gameObject);
+            }
+        }
     }
 }

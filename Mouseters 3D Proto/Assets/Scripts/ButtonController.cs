@@ -6,6 +6,6 @@ using UnityEngine.SceneManagement;
 public class ButtonController : MonoBehaviour
 {
     public void OnButtonPress() {
-    	SceneManager.LoadScene("SampleScene");
+    	SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
