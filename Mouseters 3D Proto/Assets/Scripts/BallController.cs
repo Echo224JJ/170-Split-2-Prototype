@@ -9,6 +9,7 @@ public class BallController : MonoBehaviour
     public float force_per_unity = 750;
     //force per unit in drag vector lenth
     public float force_multiplier = 1;
+    public float max_force = 1.2f;
     Vector3 force_to_add;
     Vector3 mousepos;
     Vector3 mouse_start_pos;
@@ -20,6 +21,7 @@ public class BallController : MonoBehaviour
     void Start()
     {
         line = this.GetComponent<LineRenderer>();
+        line.startWidth = line.endWidth = 0.03f;
         camera_initial_loc = Camera.main.transform.position;
     }
 
@@ -60,10 +62,15 @@ public class BallController : MonoBehaviour
             //negative_force_vec = new Vector3(ballpos.x-mousepos.x, 0.0f, ballpos.z-mousepos.y);
             //var endpos = Vector3.Normalize(potato);
             var lineend = new Vector3(mouseWorld.x,ballpos.y,mouseWorld.z);
-            line.SetPosition(1,lineend);
-            //line.endWidth = 0;
             //Debug.Log("WORLD-ballpos" +ballpos+"    |SCREEN-forceVec"+forceVec+"   |WORLD-dist"+distance+"   |WORLD-mousepos"+mouseWorld);
+
             var lineLen = Vector3.Distance(ballpos,lineend);
+            if (lineLen > max_force) {
+                lineLen = max_force;
+                lineend /= max_force;
+            }
+            line.SetPosition(1,lineend);
+            
             //Debug.Log("distance? "+lineLen);
             if (Input.GetMouseButtonUp(0) == true) {    
                 aiming = false;
@@ -76,6 +83,7 @@ public class BallController : MonoBehaviour
         }
     }
     void shoot(Vector3 dir, float force) {
+        Debug.Log("distance:  "+force+"||calculated force:  "+(dir * (force * (force_multiplier * force_per_unity))));
         this.GetComponent<Rigidbody>().AddForce(dir * (force * (force_multiplier * force_per_unity)));
     }
 
