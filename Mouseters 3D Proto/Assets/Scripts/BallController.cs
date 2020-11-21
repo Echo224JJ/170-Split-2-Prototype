@@ -10,7 +10,7 @@ public class BallController : MonoBehaviour
     public float force_per_unity = 750;
     //force per unit in drag vector lenth
     public float force_multiplier = 1;
-    public float max_force = 1.2f;
+    public float max_unities = 1.2f;
     Vector3 force_to_add;
     Vector3 mousepos;
     Vector3 mouse_start_pos;
@@ -54,25 +54,25 @@ public class BallController : MonoBehaviour
             var heading = ballpos - Camera.main.transform.position;
             var distance = Vector3.Dot(heading, Camera.main.transform.forward);
             var mouseWorld = GetMouseAsWorldSpace(distance);
-            //create vec3 with from ball in screenspace and mouse pos
-            // var forceVec = ballpos_screenspace - mousepos;
-            // //TRANSLATE 
-            // forceVec.x = -forceVec.x;
-            // forceVec.z = -forceVec.y;
-            // forceVec.y = 0f;
-            // var potato = ballpos + forceVec;
-            //negative_force_vec = new Vector3(ballpos.x-mousepos.x, 0.0f, ballpos.z-mousepos.y);
-            //var endpos = Vector3.Normalize(potato);
             var lineend = new Vector3(mouseWorld.x,ballpos.y,mouseWorld.z);
-            //Debug.Log("WORLD-ballpos" +ballpos+"    |SCREEN-forceVec"+forceVec+"   |WORLD-dist"+distance+"   |WORLD-mousepos"+mouseWorld);
 
             var lineLen = Vector3.Distance(ballpos,lineend);
-            if (lineLen > max_force) {
-                lineLen = max_force;
-                lineend /= max_force;
-            }
-            line.SetPosition(1,lineend);
             
+            //implement max force
+            if (lineLen > max_unities) {
+                lineLen = max_unities;
+                var newend = Vector3.Normalize(new Vector3(lineend.x, 0, lineend.z) - new Vector3(ballpos.x, 0, ballpos.z));
+                newend.y = ballpos.y;
+                //PrintVector3(newend,1);
+                newend = (newend*max_unities) + new Vector3(ballpos.x, 0, ballpos.z);
+                line.SetPosition(1,newend);
+                
+            }
+            else {
+                line.SetPosition(1,lineend);
+                //PrintVector3(lineend,1);
+            }
+
             //Debug.Log("distance? "+lineLen);
             if (Input.GetMouseButtonUp(0) == true) {    
                 aiming = false;
@@ -85,8 +85,9 @@ public class BallController : MonoBehaviour
         }
     }
     void shoot(Vector3 dir, float force) {
-        Debug.Log("distance:  "+force+"||calculated force:  "+(dir * (force * (force_multiplier * force_per_unity))));
-        this.GetComponent<Rigidbody>().AddForce(dir * (force * (force_multiplier * force_per_unity)));
+        var calculatedForce = (dir * (force * (force_multiplier * force_per_unity)));
+        //Debug.Log("distance:  "+force+"||calculated force:  "+calculatedForce);
+        this.GetComponent<Rigidbody>().AddForce(calculatedForce);
     }
 
     void OnTriggerEnter (Collider other) {
@@ -115,5 +116,13 @@ public class BallController : MonoBehaviour
                 Destroy(collision.gameObject);
             }
         }
+    }
+    void PrintVector3(Vector3 message, int type = 1) {
+        if (type == 1)
+            Debug.Log("X: " + message.x + "  Y: " + message.y + "  Z:" + message.z);
+        if (type == 2)
+            Debug.LogWarning("X: " + message.x + "  Y: " + message.y + "  Z:" + message.z);
+        if (type == 3)
+            Debug.LogError("X: " + message.x + "  Y: " + message.y + "  Z:" + message.z);
     }
 }
