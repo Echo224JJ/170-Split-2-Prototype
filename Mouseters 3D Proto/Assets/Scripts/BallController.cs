@@ -5,6 +5,7 @@ using UnityEngine;
 public class BallController : MonoBehaviour
 {
     public bool groundAbility;
+    public bool electricAbility;
     private bool aiming = false;
     public bool camera_follow = false;
     public float force_per_unity = 750;
@@ -22,6 +23,7 @@ public class BallController : MonoBehaviour
     void Start()
     {
         groundAbility = false;
+        electricAbility = false;
         line = this.GetComponent<LineRenderer>();
         line.startWidth = line.endWidth = 0.03f;
         camera_initial_loc = Camera.main.transform.position;
@@ -98,6 +100,7 @@ public class BallController : MonoBehaviour
             this.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
             this.transform.position = startingPos;
         }
+
     }
     private Vector3 GetMouseAsWorldSpace(float depth) {
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -114,6 +117,14 @@ public class BallController : MonoBehaviour
             if (collision.gameObject.tag == "Rock")
             {
                 Destroy(collision.gameObject);
+            }
+        }
+        if(electricAbility == false)
+        {
+            if (collision.gameObject.tag == "Electric")
+            {
+                this.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+                this.transform.position = startingPos;
             }
         }
     }
